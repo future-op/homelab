@@ -131,7 +131,7 @@
       "id": "pfsense",
       "name": "pfSense",
       "node": "firewall appliance",
-      "desc": "Firewall, router, DHCP and WireGuard"
+      "desc": "Firewall, router and DHCP"
     },
     {
       "id": "proxmox-backup-server",

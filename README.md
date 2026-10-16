@@ -39,7 +39,7 @@ Any static host (nginx, Caddy, GitHub Pages, a container) works the same way: ju
 | `boot` | lines typed in the boot intro. Lines starting with `[ OK ]`, `[INFO]` or `[WARN]` are color-coded (INFO is cyan) |
 | `home` | `heading` (the typed command), `bio` paragraphs, `facts` tiles |
 | `hardware.items` | one card per machine or device: `name`, `role`, `icon` (`server`, `storage`, `chip`, `shield`, `network`, `power`), `specs` as `[label, value]` pairs, `tags` |
-| `network.diagram` | `nodes` (id, label, sub, x, y, w, h in SVG units), `links` (pairs of node ids) and an optional `caption`. Nodes with ids starting `v` + digit are amber (VLANs); `vpn` is dashed cyan. Links go from the bottom of the first node to the top of the second; nodes on the same row are linked side to side |
+| `network.diagram` | `nodes` (`id`, `label`, `sub`, `kind`, `x/y/w/h`), `links` as `{from,to,speed}` (`wan`/`1g`/`2.5g`/`lab`/`remote`/`iot`), optional `groups` (dashed labeled regions, used for the nested lab), and `caption`. Renderer builds an orthogonal SVG with neon strokes and packet animations (honors `prefers-reduced-motion`) |
 | `network.vlans` | VLAN table rows: `id`, `name`, `note`. A `subnet` column appears only if some row has a `subnet` value (left out on the public site on purpose) |
 | `network.dns`, `network.vpn` | the two bullet lists (`title`, `points`) |
 | `projects.items` | `title`, `summary` (a string, or an array of paragraphs), `tags`, and optional `date` and `url` |

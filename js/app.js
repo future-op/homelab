@@ -142,37 +142,290 @@
 
   function renderNetwork(n) {
     $('network-intro').textContent = n.intro || '';
-    var d = n.diagram || { nodes: [], links: [] };
+    var d = n.diagram || { nodes: [], links: [], groups: [] };
+    var pad = 16;
     var maxX = 0, maxY = 0, byId = {};
-    d.nodes.forEach(function (nd) { byId[nd.id] = nd; maxX = Math.max(maxX, nd.x + nd.w); maxY = Math.max(maxY, nd.y + nd.h); });
-    var s = svg('svg', { viewBox: '0 0 ' + (maxX + 20) + ' ' + (maxY + 20), preserveAspectRatio: 'xMidYMid meet' });
-    var title = svg('title', {}); title.textContent = 'Network diagram: ' + d.nodes.map(function (x) { return x.label; }).join(', ');
-    s.appendChild(title);
-    d.links.forEach(function (l) {
-      var a = byId[l[0]], b = byId[l[1]]; if (!a || !b) return;
-      var x1 = a.x + a.w / 2, y1 = a.y + a.h, x2 = b.x + b.w / 2, y2 = b.y;
-      if (Math.abs(a.y - b.y) < 10) { // same row: connect sides
-        var left = a.x < b.x ? a : b, right = a.x < b.x ? b : a;
-        x1 = left.x + left.w; y1 = left.y + left.h / 2; x2 = right.x; y2 = right.y + right.h / 2;
-        s.appendChild(svg('path', { 'class': 'lnk', d: 'M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 }));
-      } else {
-        var my = (y1 + y2) / 2;
-        s.appendChild(svg('path', { 'class': 'lnk', d: 'M' + x1 + ' ' + y1 + ' C' + x1 + ' ' + my + ' ' + x2 + ' ' + my + ' ' + x2 + ' ' + y2 }));
-      }
+    (d.groups || []).forEach(function (g) {
+      maxX = Math.max(maxX, g.x + g.w);
+      maxY = Math.max(maxY, g.y + g.h);
     });
     d.nodes.forEach(function (nd) {
-      var cls = 'dn' + (/^v\d/.test(nd.id) ? ' vlan' : '') + (nd.id === 'vpn' ? ' vpn' : '');
-      var g = svg('g', { 'class': cls });
-      g.appendChild(svg('rect', { x: nd.x, y: nd.y, width: nd.w, height: nd.h, rx: 6 }));
-      var t1 = svg('text', { 'class': 't1', x: nd.x + nd.w / 2, y: nd.y + 20 }); t1.textContent = nd.label;
-      var t2 = svg('text', { 'class': 't2', x: nd.x + nd.w / 2, y: nd.y + 36 }); t2.textContent = nd.sub || '';
-      g.appendChild(t1); g.appendChild(t2); s.appendChild(g);
+      byId[nd.id] = nd;
+      maxX = Math.max(maxX, nd.x + nd.w);
+      maxY = Math.max(maxY, nd.y + nd.h);
     });
-    $('diagram').appendChild(s);
+    var vbW = maxX + pad, vbH = maxY + 56;
+    var s = svg('svg', {
+      viewBox: '0 0 ' + vbW + ' ' + vbH,
+      preserveAspectRatio: 'xMidYMid meet',
+      'class': 'topo-svg',
+      role: 'img'
+    });
+    var title = svg('title', {});
+    title.textContent = 'Network topology: Internet to pfSense to MikroTik core switch, Proxmox nodes, and a nested VMware lab on an isolated VLAN';
+    s.appendChild(title);
+    var desc = svg('desc', {});
+    desc.textContent = 'Every device connects upstream. Link colors show speed: cyan for 2.5 GbE, yellow for 1 GbE, pink for the isolated nested lab segment.';
+    s.appendChild(desc);
+
+    /* defs: neon glow + arrow */
+    var defs = svg('defs', {});
+    var glow = svg('filter', { id: 'neon', x: '-40%', y: '-40%', width: '180%', height: '180%' });
+    glow.appendChild(svg('feGaussianBlur', { stdDeviation: '2.2', result: 'b' }));
+    var merge = svg('feMerge', {});
+    merge.appendChild(svg('feMergeNode', { in: 'b' }));
+    merge.appendChild(svg('feMergeNode', { in: 'SourceGraphic' }));
+    glow.appendChild(merge);
+    defs.appendChild(glow);
+    var glowP = svg('filter', { id: 'neon-pink', x: '-50%', y: '-50%', width: '200%', height: '200%' });
+    glowP.appendChild(svg('feGaussianBlur', { stdDeviation: '3', result: 'b' }));
+    var mergeP = svg('feMerge', {});
+    mergeP.appendChild(svg('feMergeNode', { in: 'b' }));
+    mergeP.appendChild(svg('feMergeNode', { in: 'SourceGraphic' }));
+    glowP.appendChild(mergeP);
+    defs.appendChild(glowP);
+    s.appendChild(defs);
+
+    /* subtle grid */
+    var grid = svg('g', { 'class': 'topo-grid', 'aria-hidden': 'true' });
+    var gx, gy;
+    for (gx = 0; gx <= vbW; gx += 40) {
+      grid.appendChild(svg('line', { x1: gx, y1: 0, x2: gx, y2: vbH }));
+    }
+    for (gy = 0; gy <= vbH; gy += 40) {
+      grid.appendChild(svg('line', { x1: 0, y1: gy, x2: vbW, y2: gy }));
+    }
+    s.appendChild(grid);
+
+    function clipPath(x, y, w, h, cut) {
+      cut = cut || 10;
+      return 'M' + (x + cut) + ' ' + y +
+        'H' + (x + w) +
+        'V' + (y + h - cut) +
+        'L' + (x + w - cut) + ' ' + (y + h) +
+        'H' + x +
+        'V' + (y + cut) + 'Z';
+    }
+
+    function anchor(a, b) {
+      var acx = a.x + a.w / 2, acy = a.y + a.h / 2;
+      var bcx = b.x + b.w / 2, bcy = b.y + b.h / 2;
+      var dx = bcx - acx, dy = bcy - acy;
+      var from, to;
+      if (Math.abs(dx) > Math.abs(dy) * 1.15) {
+        /* mostly horizontal */
+        if (dx > 0) {
+          from = { x: a.x + a.w, y: acy };
+          to = { x: b.x, y: bcy };
+        } else {
+          from = { x: a.x, y: acy };
+          to = { x: b.x + b.w, y: bcy };
+        }
+      } else {
+        if (dy > 0) {
+          from = { x: acx, y: a.y + a.h };
+          to = { x: bcx, y: b.y };
+        } else {
+          from = { x: acx, y: a.y };
+          to = { x: bcx, y: b.y + b.h };
+        }
+      }
+      return { from: from, to: to };
+    }
+
+    function orthoPath(p1, p2) {
+      var mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
+      if (Math.abs(p1.x - p2.x) < 2 || Math.abs(p1.y - p2.y) < 2) {
+        return 'M' + p1.x + ' ' + p1.y + ' L' + p2.x + ' ' + p2.y;
+      }
+      /* downward fan: drop a short stub, then horizontal, then into target */
+      if (p2.y > p1.y + 8) {
+        var stub = p1.y + Math.min(28, (p2.y - p1.y) * 0.35);
+        return 'M' + p1.x + ' ' + p1.y + ' L' + p1.x + ' ' + stub + ' L' + p2.x + ' ' + stub + ' L' + p2.x + ' ' + p2.y;
+      }
+      if (Math.abs(p2.y - p1.y) >= Math.abs(p2.x - p1.x)) {
+        return 'M' + p1.x + ' ' + p1.y + ' L' + p1.x + ' ' + my + ' L' + p2.x + ' ' + my + ' L' + p2.x + ' ' + p2.y;
+      }
+      return 'M' + p1.x + ' ' + p1.y + ' L' + mx + ' ' + p1.y + ' L' + mx + ' ' + p2.y + ' L' + p2.x + ' ' + p2.y;
+    }
+
+    function speedClass(sp) {
+      if (sp === '2.5g') return 'lnk lnk-25';
+      if (sp === '1g') return 'lnk lnk-1g';
+      if (sp === 'lab') return 'lnk lnk-lab';
+      if (sp === 'remote') return 'lnk lnk-remote';
+      if (sp === 'iot') return 'lnk lnk-iot';
+      if (sp === 'wan') return 'lnk lnk-wan';
+      return 'lnk lnk-1g';
+    }
+
+    function speedLabel(sp) {
+      if (sp === '2.5g') return '2.5 GbE';
+      if (sp === '1g') return '1 GbE';
+      if (sp === 'lab') return 'lab';
+      if (sp === 'remote') return 'overlay';
+      if (sp === 'iot') return 'IoT';
+      if (sp === 'wan') return 'WAN';
+      return '';
+    }
+
+    function normalizeLink(l) {
+      if (Array.isArray(l)) return { from: l[0], to: l[1], speed: l[2] || '1g' };
+      return { from: l.from || l[0], to: l.to || l[1], speed: l.speed || '1g' };
+    }
+
+    /* groups (isolated nested lab boundary) behind links */
+    (d.groups || []).forEach(function (g) {
+      var gg = svg('g', { 'class': 'topo-group' });
+      var border = svg('path', {
+        'class': 'topo-group-border',
+        d: clipPath(g.x, g.y, g.w, g.h, 16),
+        fill: 'rgba(255,43,214,.06)',
+        filter: 'url(#neon-pink)'
+      });
+      gg.appendChild(border);
+      var lab = svg('text', {
+        'class': 'topo-group-label',
+        x: g.x + 18, y: g.y + 22
+      });
+      lab.textContent = g.label || '';
+      gg.appendChild(lab);
+      if (g.sub) {
+        var sub = svg('text', {
+          'class': 'topo-group-sub',
+          x: g.x + 18, y: g.y + 38
+        });
+        sub.textContent = g.sub;
+        gg.appendChild(sub);
+      }
+      s.appendChild(gg);
+    });
+
+    /* links */
+    var linkLayer = svg('g', { 'class': 'topo-links' });
+    var packetLayer = svg('g', { 'class': 'topo-packets', 'aria-hidden': 'true' });
+    var labelLayer = svg('g', { 'class': 'topo-link-labels' });
+    var linkMeta = [];
+    d.links.forEach(function (raw, i) {
+      var l = normalizeLink(raw);
+      var a = byId[l.from], b = byId[l.to];
+      if (!a || !b) return;
+      var ends = anchor(a, b);
+      var dPath;
+      if (l.speed === 'lab' && Math.abs(ends.to.x - ends.from.x) > 120) {
+        var c1x = ends.from.x + (ends.to.x - ends.from.x) * 0.45;
+        var c2x = ends.from.x + (ends.to.x - ends.from.x) * 0.55;
+        dPath = 'M' + ends.from.x + ' ' + ends.from.y +
+          ' C' + c1x + ' ' + ends.from.y + ' ' + c2x + ' ' + ends.to.y + ' ' + ends.to.x + ' ' + ends.to.y;
+      } else {
+        dPath = orthoPath(ends.from, ends.to);
+      }
+      var pid = 'lp' + i;
+      var pathAttrs = {
+        id: pid,
+        'class': speedClass(l.speed),
+        d: dPath,
+        fill: 'none'
+      };
+      if (l.speed === 'lab' || l.speed === '2.5g') pathAttrs.filter = 'url(#neon)';
+      var path = svg('path', pathAttrs);
+      linkLayer.appendChild(path);
+      linkMeta.push({ path: path, speed: l.speed, from: ends.from, to: ends.to, d: dPath, id: pid });
+
+      var lbl = speedLabel(l.speed);
+      /* only label distinctive uplink speeds on longer spans */
+      if ((l.speed === '2.5g' || l.speed === 'lab' || l.speed === 'wan') && Math.hypot(ends.to.x - ends.from.x, ends.to.y - ends.from.y) > 70) {
+        var lx = (ends.from.x + ends.to.x) / 2;
+        var ly = (ends.from.y + ends.to.y) / 2 - 6;
+        var t = svg('text', { 'class': 'lnk-label lnk-label-' + String(l.speed).replace('.', ''), x: lx, y: ly });
+        t.textContent = lbl;
+        labelLayer.appendChild(t);
+      }
+    });
+    s.appendChild(linkLayer);
+    s.appendChild(labelLayer);
+
+    /* animated packets */
+    if (!reduceMotion) {
+      linkMeta.forEach(function (m, i) {
+        if (m.speed === 'iot' && i % 2) return;
+        var c = svg('circle', {
+          'class': 'pkt pkt-' + String(m.speed).replace('.', ''),
+          r: m.speed === '2.5g' || m.speed === 'lab' ? 3.2 : 2.4,
+          cx: 0, cy: 0
+        });
+        var am = document.createElementNS(SVGNS, 'animateMotion');
+        am.setAttribute('dur', (m.speed === '2.5g' ? 2.2 : m.speed === 'lab' ? 2.8 : 3.4) + 's');
+        am.setAttribute('repeatCount', 'indefinite');
+        am.setAttribute('begin', (i * 0.18) + 's');
+        var mpath = document.createElementNS(SVGNS, 'mpath');
+        mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + m.id);
+        mpath.setAttribute('href', '#' + m.id);
+        am.appendChild(mpath);
+        c.appendChild(am);
+        packetLayer.appendChild(c);
+      });
+    }
+    s.appendChild(packetLayer);
+
+    /* nodes */
+    function kindClass(nd) {
+      var k = nd.kind || '';
+      if (k) return 'dn dn-' + k;
+      if (/^v\d/.test(nd.id)) return 'dn dn-vlan';
+      return 'dn dn-node';
+    }
+    d.nodes.forEach(function (nd) {
+      var g = svg('g', { 'class': kindClass(nd) });
+      var body = svg('path', {
+        'class': 'dn-body',
+        d: clipPath(nd.x, nd.y, nd.w, nd.h, 9)
+      });
+      g.appendChild(body);
+      /* accent bar */
+      g.appendChild(svg('path', {
+        'class': 'dn-accent',
+        d: 'M' + (nd.x + 10) + ' ' + (nd.y + 2) + 'H' + (nd.x + Math.min(36, nd.w - 12))
+      }));
+      var t1 = svg('text', { 'class': 't1', x: nd.x + nd.w / 2, y: nd.y + (nd.sub ? 20 : 28) });
+      t1.textContent = nd.label;
+      g.appendChild(t1);
+      if (nd.sub) {
+        var t2 = svg('text', { 'class': 't2', x: nd.x + nd.w / 2, y: nd.y + 36 });
+        t2.textContent = nd.sub;
+        g.appendChild(t2);
+      }
+      s.appendChild(g);
+    });
+
+    /* legend */
+    var legend = svg('g', { 'class': 'topo-legend', transform: 'translate(16 ' + (maxY + 18) + ')' });
+    var items = [
+      { cls: 'lnk-25', label: '2.5 GbE' },
+      { cls: 'lnk-1g', label: '1 GbE' },
+      { cls: 'lnk-lab', label: 'Nested lab VLAN' },
+      { cls: 'lnk-remote', label: 'Overlay / remote' },
+      { cls: 'lnk-wan', label: 'WAN' }
+    ];
+    var lx = 0;
+    items.forEach(function (it) {
+      legend.appendChild(svg('line', {
+        'class': 'lnk ' + it.cls,
+        x1: lx, y1: 0, x2: lx + 28, y2: 0
+      }));
+      var lt = svg('text', { 'class': 'legend-t', x: lx + 34, y: 4 });
+      lt.textContent = it.label;
+      legend.appendChild(lt);
+      lx += 28 + it.label.length * 7.2 + 22;
+    });
+    s.appendChild(legend);
+
+    var host = $('diagram');
+    host.textContent = '';
+    host.appendChild(s);
     $('diagram-cap').textContent = d.caption || '';
 
-    // Subnet column is optional: only shown if some VLAN entry has a "subnet" value
-    // (the public site omits subnets on purpose).
+    /* VLAN table + side cards (unchanged behavior) */
     var vl = n.vlans || [], hasSubnet = vl.some(function (v) { return v.subnet; });
     var cols = [['ID', 'id'], ['Name', 'name']];
     if (hasSubnet) cols.push(['Subnet', 'subnet']);
@@ -180,6 +433,7 @@
     var hr = $('vlan-table').tHead.rows[0]; hr.textContent = '';
     cols.forEach(function (c) { var th = el('th', null, c[0]); th.scope = 'col'; hr.appendChild(th); });
     var tb = $('vlan-table').tBodies[0];
+    tb.textContent = '';
     vl.forEach(function (v) {
       var tr = el('tr');
       cols.forEach(function (c) { tr.appendChild(el('td', null, v[c[1]] == null ? '' : String(v[c[1]]))); });
@@ -187,6 +441,7 @@
     });
     [['dns-card', n.dns], ['vpn-card', n.vpn]].forEach(function (p) {
       var box = $(p[0]); if (!p[1]) return;
+      box.textContent = '';
       box.appendChild(el('h3', null, p[1].title));
       var ul = el('ul'); p[1].points.forEach(function (x) { ul.appendChild(el('li', null, x)); });
       box.appendChild(ul);
