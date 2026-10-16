@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-16T06:00:01Z",
+  "updated": "2026-10-16T12:00:01Z",
   "services": [
     {
       "id": "ads-b-tracker",
@@ -24,7 +24,7 @@
     {
       "id": "dos-games-js-dos",
       "name": "DOS games (js-dos)",
-      "state": "up"
+      "state": "down"
     },
     {
       "id": "file-server",
@@ -89,7 +89,7 @@
     {
       "id": "romm",
       "name": "RomM",
-      "state": "up"
+      "state": "down"
     },
     {
       "id": "sabnzbd",
@@ -114,7 +114,7 @@
     {
       "id": "windows-gaming-vm",
       "name": "Windows gaming VM",
-      "state": "stopped"
+      "state": "up"
     }
   ]
 }
