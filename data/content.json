@@ -730,10 +730,9 @@
       ]
     },
     "vpn": {
-      "title": "Remote access and exposure",
+      "title": "Remote access",
       "points": [
         "Remote access runs through a Tailscale subnet router in its own container, with no inbound ports opened for it",
-        "A small set of static port forwards: Plex remote access and game-server ports, with geoblocking scoped to the game ports",
         "Management and internal services are not exposed to the internet"
       ]
     }
@@ -765,7 +764,7 @@
         "title": "Network upgrades",
         "summary": [
           "Problem: storage and gaming traffic was limited to 1 GbE, the real network layout was undocumented, and address assignment and filtering had grown ad hoc.",
-          "Approach: upgraded a storage node from 1 GbE to 2.5 GbE with a PCIe RTL8125 card, staging the config with timers that auto-revert if the node loses the router. Found the GPU node's 2.5 GbE card negotiating only 1 Gb/s and moved it to a 2.5 GbE port. Mapped every port on the managed MikroTik switch, moved all servers to static addressing, narrowed geoblocking to the game-server ports only, and added a Wi-Fi 7 access point. Kept a regenerable topology diagram from that data.",
+          "Approach: upgraded a storage node from 1 GbE to 2.5 GbE with a PCIe RTL8125 card, staging the config with timers that auto-revert if the node loses the router. Found the GPU node's 2.5 GbE card negotiating only 1 Gb/s and moved it to a 2.5 GbE port. Mapped every port on the managed MikroTik switch, moved all servers to static addressing, and added a Wi-Fi 7 access point. Kept a regenerable topology diagram from that data.",
           "Result: both 2.5 GbE nodes link at 2500 Mb/s with cluster quorum verified, a fully documented switch, predictable server addressing and a regenerable diagram."
         ],
         "tags": [
@@ -777,7 +776,6 @@
           "mikrotik routeros",
           "vlans (802.1q)",
           "static addressing",
-          "geoblocking",
           "wi-fi 7"
         ]
       },
