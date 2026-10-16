@@ -1,0 +1,120 @@
+{
+  "updated": "2026-10-16T00:00:01Z",
+  "services": [
+    {
+      "id": "ads-b-tracker",
+      "name": "ADS-B tracker",
+      "state": "up"
+    },
+    {
+      "id": "amp",
+      "name": "AMP",
+      "state": "up"
+    },
+    {
+      "id": "azerothcore",
+      "name": "AzerothCore",
+      "state": "stopped"
+    },
+    {
+      "id": "caddy",
+      "name": "Caddy",
+      "state": "up"
+    },
+    {
+      "id": "dos-games-js-dos",
+      "name": "DOS games (js-dos)",
+      "state": "up"
+    },
+    {
+      "id": "file-server",
+      "name": "File server",
+      "state": "up"
+    },
+    {
+      "id": "freeipa",
+      "name": "FreeIPA",
+      "state": "up"
+    },
+    {
+      "id": "kali-linux",
+      "name": "Kali Linux",
+      "state": "stopped"
+    },
+    {
+      "id": "kiwix",
+      "name": "Kiwix",
+      "state": "up"
+    },
+    {
+      "id": "local-ai-ollama",
+      "name": "Local AI (Ollama)",
+      "state": "stopped"
+    },
+    {
+      "id": "nextcloud",
+      "name": "Nextcloud",
+      "state": "up"
+    },
+    {
+      "id": "pfsense",
+      "name": "pfSense",
+      "state": "up"
+    },
+    {
+      "id": "pi-hole",
+      "name": "Pi-hole",
+      "state": "up"
+    },
+    {
+      "id": "plex",
+      "name": "Plex",
+      "state": "up"
+    },
+    {
+      "id": "prometheus-grafana",
+      "name": "Prometheus + Grafana",
+      "state": "up"
+    },
+    {
+      "id": "proxmox-backup-server",
+      "name": "Proxmox Backup Server",
+      "state": "up"
+    },
+    {
+      "id": "proxmox-datacenter-manager",
+      "name": "Proxmox Datacenter Manager",
+      "state": "up"
+    },
+    {
+      "id": "romm",
+      "name": "RomM",
+      "state": "up"
+    },
+    {
+      "id": "sabnzbd",
+      "name": "SABnzbd",
+      "state": "up"
+    },
+    {
+      "id": "trilium-notes",
+      "name": "Trilium Notes",
+      "state": "up"
+    },
+    {
+      "id": "wazuh",
+      "name": "Wazuh",
+      "state": "up"
+    },
+    {
+      "id": "wiki-js",
+      "name": "Wiki.js",
+      "state": "up"
+    },
+    {
+      "id": "windows-gaming-vm",
+      "name": "Windows gaming VM",
+      "state": "stopped"
+    }
+  ]
+}

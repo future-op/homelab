@@ -1,0 +1,143 @@
+{
+  "_note": "Static metadata only (id, name, node, desc). Live state comes from data/status.json, matched by id. No IPs, URLs or hostnames on the public site.",
+  "services": [
+    {
+      "id": "nextcloud",
+      "name": "Nextcloud",
+      "node": "node 1",
+      "desc": "File sync and sharing (Nextcloud 35)"
+    },
+    {
+      "id": "dos-games-js-dos",
+      "name": "DOS games (js-dos)",
+      "node": "node 1",
+      "desc": "Browser-based eXoDOS games"
+    },
+    {
+      "id": "plex",
+      "name": "Plex",
+      "node": "node 3",
+      "desc": "Plex Media Server"
+    },
+    {
+      "id": "romm",
+      "name": "RomM",
+      "node": "node 1",
+      "desc": "Browser retro ROM library (EmulatorJS)"
+    },
+    {
+      "id": "freeipa",
+      "name": "FreeIPA",
+      "node": "node 1",
+      "desc": "Identity management (LDAP, Kerberos, DNS, CA)"
+    },
+    {
+      "id": "local-ai-ollama",
+      "name": "Local AI (Ollama)",
+      "node": "GPU node",
+      "desc": "Local LLM chat on a GPU (RTX 3070 passthrough)"
+    },
+    {
+      "id": "kali-linux",
+      "name": "Kali Linux",
+      "node": "GPU node",
+      "desc": "Security testing lab VM"
+    },
+    {
+      "id": "windows-gaming-vm",
+      "name": "Windows gaming VM",
+      "node": "GPU node",
+      "desc": "Windows VM with GPU passthrough for gaming"
+    },
+    {
+      "id": "sabnzbd",
+      "name": "SABnzbd",
+      "node": "node 1",
+      "desc": "Usenet downloader"
+    },
+    {
+      "id": "trilium-notes",
+      "name": "Trilium Notes",
+      "node": "node 1",
+      "desc": "Self-hosted note app"
+    },
+    {
+      "id": "caddy",
+      "name": "Caddy",
+      "node": "node 1",
+      "desc": "Reverse proxy, HTTPS front door"
+    },
+    {
+      "id": "prometheus-grafana",
+      "name": "Prometheus + Grafana",
+      "node": "node 1",
+      "desc": "Monitoring, Alertmanager and Discord alerts"
+    },
+    {
+      "id": "ads-b-tracker",
+      "name": "ADS-B tracker",
+      "node": "GPU node",
+      "desc": "readsb + tar1090 with a USB SDR dongle"
+    },
+    {
+      "id": "azerothcore",
+      "name": "AzerothCore",
+      "node": "node 2",
+      "desc": "WoW 3.3.5a private server in Docker"
+    },
+    {
+      "id": "wiki-js",
+      "name": "Wiki.js",
+      "node": "node 1",
+      "desc": "Lab documentation wiki"
+    },
+    {
+      "id": "wazuh",
+      "name": "Wazuh",
+      "node": "node 2",
+      "desc": "Security monitoring (SIEM/XDR)"
+    },
+    {
+      "id": "kiwix",
+      "name": "Kiwix",
+      "node": "node 2",
+      "desc": "Offline Wikipedia, Super User, iFixit and Wikivoyage"
+    },
+    {
+      "id": "amp",
+      "name": "AMP",
+      "node": "node 3",
+      "desc": "CubeCoders game-server panel"
+    },
+    {
+      "id": "file-server",
+      "name": "File server",
+      "node": "node 1",
+      "desc": "SMB/FTP file server (TurnKey FileServer)"
+    },
+    {
+      "id": "proxmox-datacenter-manager",
+      "name": "Proxmox Datacenter Manager",
+      "node": "node 3",
+      "desc": "Multi-cluster management (PDM)"
+    },
+    {
+      "id": "pi-hole",
+      "name": "Pi-hole",
+      "node": "Raspberry Pi pair",
+      "desc": "Network-wide DNS filtering (synced primary/backup)"
+    },
+    {
+      "id": "pfsense",
+      "name": "pfSense",
+      "node": "firewall appliance",
+      "desc": "Firewall, router, DHCP and WireGuard"
+    },
+    {
+      "id": "proxmox-backup-server",
+      "name": "Proxmox Backup Server",
+      "node": "backup server",
+      "desc": "Weekly snapshot backups of every guest"
+    }
+  ]
+}

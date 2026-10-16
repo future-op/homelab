@@ -1,0 +1,52 @@
+{
+  "_note": "Copy to tools/mapping.json (git-ignored) and edit. Left side = INTERNAL names, right side = PUBLIC ids from data/services.json. Only mapped items are ever published (allowlist), so unmapped internal jobs/guests can never leak. Internal names never appear in the output.",
+  "prometheus": {
+    "_note": "label = which label on 'up{...}' identifies the target (usually 'job' or 'instance'). 'rules' match any set of labels (exact match; '__name__' = metric name), e.g. prometheus-pve-exporter's pve_up{id=\"qemu/107\"} or {id=\"lxc/101\"}. Rules win over 'map'. For pve_up, 1 = guest running, 0 = guest not running (reported as off_state, default 'down'). Run with PROM_QUERY='pve_up or up'. Several internal names / rules may map to the same public id.",
+    "label": "job",
+    "map": {
+      "nextcloud-example": "nextcloud",
+      "plex-example": "plex",
+      "caddy-example": "caddy",
+      "pihole-example": "pi-hole",
+      "pfsense-example": "pfsense"
+    },
+    "rules": [
+      {
+        "match": {
+          "__name__": "pve_up",
+          "id": "lxc/101"
+        },
+        "id": "nextcloud"
+      },
+      {
+        "match": {
+          "__name__": "pve_up",
+          "id": "qemu/102"
+        },
+        "id": "plex"
+      },
+      {
+        "match": {
+          "__name__": "pve_up",
+          "name": "example-guest-name"
+        },
+        "id": "caddy"
+      },
+      {
+        "match": {
+          "__name__": "pve_up",
+          "id": "lxc/105"
+        },
+        "id": "wiki-js"
+      }
+    ]
+  },
+  "proxmox": {
+    "_note": "Proxmox guest IDs (vmid) -> public ids. Only used when PVE_URL is set. A guest that is 'stopped' is reported as 'stopped' (not 'down').",
+    "map": {
+      "101": "nextcloud",
+      "108": "kali-linux",
+      "111": "windows-gaming-vm"
+    }
+  }
+}

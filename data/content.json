@@ -1,0 +1,734 @@
+{
+  "_note": "Public site: keep internal IPs, subnets, internal hostnames and anything credential-related OUT of this file. Updated Oct 14, 2026.",
+  "site": {
+    "title": "Brittain Homelab",
+    "user": "john",
+    "host": "homelab",
+    "tagline": "Four-node Proxmox VE cluster: file storage, identity, security monitoring, metrics and alerting, backups, and a few fun projects."
+  },
+  "boot": [
+    "[ OK ] Cluster: 4 Proxmox VE nodes, quorate",
+    "[ OK ] Nested vSphere 8 lab: 3 ESXi hosts under vCenter 8.0.2",
+    "[ .. ] NetApp ONTAP 9.19.1 simulator: 2-node cluster build in progress",
+    "[ OK ] ZFS pools imported (about 36 TiB across 4 HDD pools + 2 SSD pools)",
+    "[ OK ] Prometheus / Alertmanager: alerts routed to Discord",
+    "[ OK ] Proxmox Backup Server: weekly snapshot backups scheduled",
+    "Welcome to Brittain Homelab"
+  ],
+  "home": {
+    "heading": "whoami",
+    "bio": [
+      "Brittain Homelab: a four-node Proxmox VE cluster running about twenty services, including file storage, identity, security monitoring, metrics and alerting, backups, and a few fun projects.",
+      "Designed, built and operated by John Brittain as a hands-on platform for systems, networking and storage engineering.",
+      "Self-hosted infrastructure, Proxmox, VMware vSphere, NetApp ONTAP, ZFS and observability."
+    ],
+    "facts": [
+      {
+        "key": "nodes",
+        "value": "4 Proxmox nodes (clustered, quorate)"
+      },
+      {
+        "key": "guests",
+        "value": "20 guests: 13 containers, 7 VMs"
+      },
+      {
+        "key": "compute",
+        "value": "28 logical CPUs, 144 GB RAM"
+      },
+      {
+        "key": "storage",
+        "value": "≈36 TiB ZFS HDD capacity (4 pools) + 2 SSD pools"
+      },
+      {
+        "key": "network",
+        "value": "2.5 GbE to the storage node and GPU node"
+      },
+      {
+        "key": "alerting",
+        "value": "19 Prometheus alert rules"
+      },
+      {
+        "key": "backups",
+        "value": "14.4 TiB Proxmox Backup Server datastore"
+      },
+      {
+        "key": "platform",
+        "value": "Proxmox VE 9.2"
+      }
+    ]
+  },
+  "hardware": {
+    "intro": "Four Proxmox VE 9.2 nodes, plus the firewall, switching, DNS, backup and storage that tie them together.",
+    "items": [
+      {
+        "name": "Node 1",
+        "role": "Storage and core services",
+        "icon": "server",
+        "specs": [
+          [
+            "Hardware",
+            "Custom mini-ITX (H170M-ITX/DL)"
+          ],
+          [
+            "CPU",
+            "Core i7-6700 (4C/8T), replacement upgrade"
+          ],
+          [
+            "RAM",
+            "32 GB"
+          ],
+          [
+            "NIC",
+            "2.5 GbE (RTL8125)"
+          ],
+          [
+            "Runs",
+            "File server, Nextcloud, RomM, DOS games, SABnzbd, Trilium, Caddy, monitoring, FreeIPA, Wiki.js, code-server (browser VS Code)"
+          ],
+          [
+            "Storage",
+            "USB drives with ZFS pools (one 14 TB, two 10 TB, one 6 TB) and a 500 GB SSD pool"
+          ]
+        ],
+        "tags": [
+          "proxmox",
+          "storage",
+          "core services"
+        ]
+      },
+      {
+        "name": "Node 2",
+        "role": "Security and game servers",
+        "icon": "server",
+        "specs": [
+          [
+            "Hardware",
+            "Lenovo ThinkCentre M710q"
+          ],
+          [
+            "CPU",
+            "Core i5-7500T (4C/4T)"
+          ],
+          [
+            "RAM",
+            "32 GB"
+          ],
+          [
+            "NIC",
+            "1 GbE (Intel I219-V)"
+          ],
+          [
+            "Runs",
+            "AzerothCore (WoW) server, Wazuh SIEM, Kiwix offline library (Wikipedia, Super User, iFixit, Wikivoyage)"
+          ],
+          [
+            "Storage",
+            "500 GB SSD ZFS pool"
+          ]
+        ],
+        "tags": [
+          "proxmox",
+          "security"
+        ]
+      },
+      {
+        "name": "Node 3",
+        "role": "Media and management",
+        "icon": "server",
+        "specs": [
+          [
+            "Hardware",
+            "Lenovo ThinkCentre M710q"
+          ],
+          [
+            "CPU",
+            "Core i5-7500T (4C/4T)"
+          ],
+          [
+            "RAM",
+            "16 GB"
+          ],
+          [
+            "NIC",
+            "1 GbE (Intel I219-V)"
+          ],
+          [
+            "Runs",
+            "Plex (iGPU transcoding), AMP game panel, Proxmox Datacenter Manager"
+          ],
+          [
+            "Storage",
+            "1 TB external drive exported over NFS"
+          ]
+        ],
+        "tags": [
+          "proxmox",
+          "media"
+        ]
+      },
+      {
+        "name": "GPU node",
+        "role": "GPU and gaming",
+        "icon": "chip",
+        "specs": [
+          [
+            "Hardware",
+            "Desktop (MSI B560M-A PRO)"
+          ],
+          [
+            "CPU",
+            "Core i7-11700K (8C/16T)"
+          ],
+          [
+            "GPU",
+            "RTX 3070 (passthrough)"
+          ],
+          [
+            "RAM",
+            "64 GB DDR4 (upgraded from 32 GB)"
+          ],
+          [
+            "NIC",
+            "2.5 GbE (RTL8125)"
+          ],
+          [
+            "Runs",
+            "Local AI VM (Ollama), ADS-B radio, Windows gaming VM, Kali VM, nested VMware vSphere lab"
+          ]
+        ],
+        "tags": [
+          "proxmox",
+          "gpu"
+        ]
+      },
+      {
+        "name": "pfSense",
+        "role": "Firewall and router",
+        "icon": "shield",
+        "specs": [
+          [
+            "Hardware",
+            "Netgate-class appliance"
+          ],
+          [
+            "Services",
+            "NAT, firewall, DHCP (Kea), WireGuard"
+          ],
+          [
+            "VLANs",
+            "802.1Q: 4090 WAN, 4091 LAN, 4092 Home/IoT"
+          ]
+        ],
+        "tags": [
+          "network",
+          "security"
+        ]
+      },
+      {
+        "name": "Wi-Fi 7 access point",
+        "role": "Wireless for clients",
+        "icon": "network",
+        "specs": [
+          [
+            "Standard",
+            "Wi-Fi 7 (802.11be)"
+          ],
+          [
+            "Uplink",
+            "Wired to the switching layer"
+          ]
+        ],
+        "tags": [
+          "network",
+          "wireless"
+        ]
+      },
+      {
+        "name": "MikroTik CRS310",
+        "role": "Core switch (CRS310-8G+2S+)",
+        "icon": "network",
+        "specs": [
+          [
+            "Ports",
+            "2.5 GbE ports + 2 × 10G SFP+"
+          ],
+          [
+            "Links",
+            "Node 1 and the GPU node at 2.5 GbE, office 2.5 GbE switch, 1 GbE switch, firewall uplink; every port mapped"
+          ],
+          [
+            "Expansion",
+            "10G SFP+ ports ready for growth"
+          ]
+        ],
+        "tags": [
+          "network",
+          "2.5 gbe"
+        ]
+      },
+      {
+        "name": "Pi-hole",
+        "role": "Network-wide DNS filtering, synced pair",
+        "icon": "chip",
+        "specs": [
+          [
+            "Layout",
+            "Primary and backup, kept in sync"
+          ],
+          [
+            "Role",
+            "DNS for most guests"
+          ],
+          [
+            "Metrics",
+            "Scraped by Prometheus"
+          ]
+        ],
+        "tags": [
+          "dns",
+          "low-power"
+        ]
+      },
+      {
+        "name": "Proxmox Backup Server",
+        "role": "Weekly backups of every guest",
+        "icon": "storage",
+        "specs": [
+          [
+            "Datastore",
+            "14.4 TiB (1.9 TiB used)"
+          ],
+          [
+            "Schedule",
+            "Sundays 01:00, snapshot mode"
+          ],
+          [
+            "History",
+            "Backups back to Jan 2026"
+          ]
+        ],
+        "tags": [
+          "backups",
+          "pbs"
+        ]
+      },
+      {
+        "name": "ZFS storage",
+        "role": "ZFS pools and snapshots",
+        "icon": "storage",
+        "specs": [
+          [
+            "14 TB pool",
+            "12.7 TiB, on Node 1, holds Nextcloud data"
+          ],
+          [
+            "10 TB pools",
+            "Two pools, 9.09 TiB each"
+          ],
+          [
+            "6 TB pool",
+            "5.45 TiB, on Node 1"
+          ],
+          [
+            "SSD pools",
+            "Two ≈464 GiB pools for guest root disks"
+          ],
+          [
+            "Snapshots",
+            "Daily ×7 and weekly ×4 on data datasets, hourly ×24 on Nextcloud"
+          ]
+        ],
+        "tags": [
+          "zfs",
+          "storage"
+        ]
+      },
+      {
+        "name": "Local AI VM",
+        "role": "Local LLM chat on a GPU",
+        "icon": "chip",
+        "specs": [
+          [
+            "Host",
+            "GPU node (VM)"
+          ],
+          [
+            "GPU",
+            "RTX 3070 (passthrough)"
+          ],
+          [
+            "Runs",
+            "Ollama"
+          ],
+          [
+            "Notes",
+            "Local LLM chat with the GPU passed through"
+          ]
+        ],
+        "tags": [
+          "gpu",
+          "ai",
+          "ollama"
+        ]
+      }
+    ]
+  },
+  "network": {
+    "intro": "pfSense firewall with 802.1Q VLANs, a MikroTik 2.5 GbE / 10G core switch, and Pi-hole for DNS. Every guest attaches to one bridge on the main LAN. Addresses are intentionally left out of this public site.",
+    "diagram": {
+      "caption": "// topology and link speeds from the lab docs; addresses omitted",
+      "nodes": [
+        {
+          "id": "inet",
+          "label": "Internet",
+          "sub": "WAN",
+          "x": 380,
+          "y": 20,
+          "w": 160,
+          "h": 46
+        },
+        {
+          "id": "v4090",
+          "label": "VLAN 4090",
+          "sub": "WAN",
+          "x": 110,
+          "y": 110,
+          "w": 170,
+          "h": 46
+        },
+        {
+          "id": "fw",
+          "label": "pfSense",
+          "sub": "firewall · NAT · DHCP",
+          "x": 380,
+          "y": 110,
+          "w": 160,
+          "h": 46
+        },
+        {
+          "id": "vpn",
+          "label": "WireGuard",
+          "sub": "enabled on pfSense",
+          "x": 650,
+          "y": 110,
+          "w": 170,
+          "h": 46
+        },
+        {
+          "id": "v4091",
+          "label": "VLAN 4091",
+          "sub": "main LAN",
+          "x": 110,
+          "y": 200,
+          "w": 170,
+          "h": 46
+        },
+        {
+          "id": "sw",
+          "label": "MikroTik CRS310",
+          "sub": "2.5 GbE + 2×10G SFP+",
+          "x": 380,
+          "y": 200,
+          "w": 160,
+          "h": 46
+        },
+        {
+          "id": "v4092",
+          "label": "VLAN 4092",
+          "sub": "Home/IoT",
+          "x": 700,
+          "y": 200,
+          "w": 170,
+          "h": 46
+        },
+        {
+          "id": "n1",
+          "label": "Node 1",
+          "sub": "2.5 GbE · storage",
+          "x": 20,
+          "y": 300,
+          "w": 150,
+          "h": 46
+        },
+        {
+          "id": "gpu",
+          "label": "GPU node",
+          "sub": "2.5 GbE · GPU",
+          "x": 190,
+          "y": 300,
+          "w": 150,
+          "h": 46
+        },
+        {
+          "id": "office",
+          "label": "Office switch",
+          "sub": "2.5 GbE",
+          "x": 360,
+          "y": 300,
+          "w": 150,
+          "h": 46
+        },
+        {
+          "id": "gsw",
+          "label": "1 GbE switch",
+          "sub": "downstream",
+          "x": 530,
+          "y": 300,
+          "w": 150,
+          "h": 46
+        },
+        {
+          "id": "ha",
+          "label": "Home Assistant",
+          "sub": "Home/IoT",
+          "x": 710,
+          "y": 300,
+          "w": 150,
+          "h": 46
+        },
+        {
+          "id": "n2",
+          "label": "Node 2",
+          "sub": "1 GbE",
+          "x": 250,
+          "y": 390,
+          "w": 140,
+          "h": 46
+        },
+        {
+          "id": "n3",
+          "label": "Node 3",
+          "sub": "1 GbE",
+          "x": 410,
+          "y": 390,
+          "w": 140,
+          "h": 46
+        },
+        {
+          "id": "pbs",
+          "label": "Backup server",
+          "sub": "PBS",
+          "x": 570,
+          "y": 390,
+          "w": 140,
+          "h": 46
+        },
+        {
+          "id": "pihole",
+          "label": "Pi-hole",
+          "sub": "DNS",
+          "x": 730,
+          "y": 390,
+          "w": 140,
+          "h": 46
+        }
+      ],
+      "links": [
+        [
+          "inet",
+          "v4090"
+        ],
+        [
+          "v4090",
+          "fw"
+        ],
+        [
+          "fw",
+          "vpn"
+        ],
+        [
+          "fw",
+          "v4091"
+        ],
+        [
+          "fw",
+          "sw"
+        ],
+        [
+          "fw",
+          "v4092"
+        ],
+        [
+          "sw",
+          "Node 1"
+        ],
+        [
+          "sw",
+          "GPU node"
+        ],
+        [
+          "sw",
+          "office"
+        ],
+        [
+          "sw",
+          "gsw"
+        ],
+        [
+          "v4092",
+          "ha"
+        ],
+        [
+          "gsw",
+          "Node 2"
+        ],
+        [
+          "gsw",
+          "Node 3"
+        ],
+        [
+          "gsw",
+          "pbs"
+        ],
+        [
+          "gsw",
+          "pihole"
+        ]
+      ]
+    },
+    "vlans": [
+      {
+        "id": 4090,
+        "name": "WAN",
+        "note": "WAN side of the pfSense uplink"
+      },
+      {
+        "id": 4091,
+        "name": "LAN",
+        "note": "Main LAN: Proxmox cluster, guests and client devices (static IPs for containers, DHCP pool for clients)"
+      },
+      {
+        "id": 4092,
+        "name": "Home/IoT",
+        "note": "Separate subnet on its own firewall interface"
+      }
+    ],
+    "dns": {
+      "title": "DNS and DHCP",
+      "points": [
+        "A synced Pi-hole pair (primary and backup) provides network-wide DNS filtering",
+        "Most guests resolve through Pi-hole; its metrics are scraped by Prometheus",
+        "FreeIPA provides LDAP, Kerberos, DNS and a CA for the lab",
+        "DHCP runs on pfSense (Kea) for clients; every server uses static addressing"
+      ]
+    },
+    "vpn": {
+      "title": "VPN and exposure",
+      "points": [
+        "Remote access runs through a Tailscale subnet router in its own container, with no inbound ports opened for it",
+        "WireGuard is also enabled on pfSense",
+        "A small set of static port forwards: Plex remote access and game-server ports, with geoblocking scoped to the game ports",
+        "Management and internal services are not exposed to the internet"
+      ]
+    }
+  },
+  "projects": {
+    "intro": "Selected work on the lab, written as problem, approach and result. Headline project first, then the core infrastructure work and a few smaller builds.",
+    "items": [
+      {
+        "title": "Nested VMware vSphere + NetApp ONTAP lab",
+        "summary": [
+          "Problem: enterprise virtualization and storage skills need real vSphere and ONTAP clusters to practice on, without buying dedicated hardware.",
+          "Approach: upgrading the GPU node from 32 GB to 64 GB DDR4 made room for the nested lab. three ESXi 8 hosts run nested inside the Proxmox cluster, joined into a vCenter 8.0.2 cluster with shared NFS storage. The cluster hosts a Windows Server 2025 domain controller, a Postgres VM and two Linux test VMs. A two-node NetApp ONTAP 9.19.1 simulator cluster is being built on the nested hosts.",
+          "Result: a working vSphere cluster with shared storage and real workloads; the ONTAP cluster is in progress."
+        ],
+        "tags": [
+          "vmware",
+          "vsphere",
+          "esxi 8",
+          "vcenter",
+          "nested virtualization",
+          "nfs",
+          "netapp ontap",
+          "windows server 2025",
+          "postgres"
+        ]
+      },
+      {
+        "title": "Network upgrades",
+        "summary": [
+          "Problem: storage and gaming traffic was limited to 1 GbE, the real network layout was undocumented, and address assignment and filtering had grown ad hoc.",
+          "Approach: upgraded a storage node from 1 GbE to 2.5 GbE with a PCIe RTL8125 card, staging the config with timers that auto-revert if the node loses the router. Found the GPU node's 2.5 GbE card negotiating only 1 Gb/s and moved it to a 2.5 GbE port. Mapped every port on the managed MikroTik switch, moved all servers to static addressing, narrowed geoblocking to the game-server ports only, and added a Wi-Fi 7 access point. The topology diagram is generated from that data with Graphviz.",
+          "Result: both 2.5 GbE nodes link at 2500 Mb/s with cluster quorum verified, a fully documented switch, predictable server addressing and a regenerable diagram."
+        ],
+        "tags": [
+          "networking",
+          "linux networking",
+          "ifupdown2 / bridges",
+          "ethtool",
+          "pfsense",
+          "mikrotik routeros",
+          "vlans (802.1q)",
+          "graphviz",
+          "static addressing",
+          "geoblocking",
+          "wi-fi 7"
+        ]
+      },
+      {
+        "title": "Monitoring and alerting",
+        "summary": [
+          "Problem: four nodes, 20 guests and several single-disk USB pools meant a hot CPU, a filling pool or a dying drive could go unnoticed.",
+          "Approach: a Docker Compose stack in an LXC container with Prometheus, Grafana and Alertmanager, node_exporter on all four nodes, plus Proxmox and Pi-hole exporters. The Proxmox exporter uses a read-only PVEAuditor API user. Added drive-health alerting (SMART, bad sectors, NVMe wear, media errors, temperature) and a script that posts a daily health summary to Discord at 8:00, 12:00 and 15:00. Fixed ZFS pools reading 0% used and a SMART collector that never ran on an NVMe-only node.",
+          "Result: 19 alert rules, 8 scrape targets, two Grafana dashboards, Discord alerting and three daily summaries."
+        ],
+        "tags": [
+          "monitoring",
+          "prometheus",
+          "promql",
+          "alertmanager",
+          "grafana",
+          "docker compose",
+          "systemd timers",
+          "shell / jq",
+          "rbac"
+        ]
+      },
+      {
+        "title": "Backup and data protection",
+        "summary": [
+          "Problem: guests lived on four hosts with different disk layouts, and the big data pools are single disks with no redundancy.",
+          "Approach: a Proxmox Backup Server and one cluster-wide vzdump job (every guest, Sundays 01:00, snapshot mode), opt-in ZFS auto-snapshots (daily ×7 and weekly ×4 on file datasets, hourly ×24 on Nextcloud), and manual snapshots plus config backups before risky changes. Audited what the job really covers, including bind-mounted data being outside vzdump.",
+          "Result: backups of every guest back to January 2026, a 14.4 TiB datastore with 1.9 TiB used, and snapshot restore points on all data datasets."
+        ],
+        "tags": [
+          "backups",
+          "storage",
+          "proxmox backup server",
+          "vzdump",
+          "zfs snapshots",
+          "retention policy",
+          "rollback planning"
+        ]
+      },
+      {
+        "title": "Remote access with Tailscale",
+        "summary": [
+          "A Tailscale subnet router runs in its own container, so the lab is reachable from anywhere without opening inbound ports."
+        ],
+        "tags": [
+          "networking",
+          "tailscale",
+          "zero trust"
+        ]
+      },
+      {
+        "title": "Redundant DNS with Pi-hole",
+        "summary": [
+          "Pi-hole now runs as a synced primary and backup pair, so DNS filtering survives the loss of either one."
+        ],
+        "tags": [
+          "dns",
+          "pi-hole",
+          "redundancy"
+        ]
+      }
+    ]
+  },
+  "status": {
+    "intro": "Live service state, refreshed about every 6 hours from a sanitized feed (names and states only).",
+    "refreshSeconds": 1800,
+    "staleMinutes": 480
+  },
+  "footer": "Brittain Homelab · updated Oct 14, 2026 · built with plain HTML, CSS and JS. No credentials are stored on this site."
+}

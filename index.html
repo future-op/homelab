@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brittain Homelab</title>
+  <meta name="description" content="Brittain Homelab: a four-node Proxmox VE cluster. Hardware, network, projects and service status.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0a0b0d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='0' fill='%23030504'/%3E%3Cpath d='M7 10l7 6-7 6' fill='none' stroke='%23fcee0a' stroke-width='3'/%3E%3Cpath d='M17 23h9' stroke='%2300f0ff' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="wrap bar-inner">
+      <a class="brand" href="#home" id="brand"><span class="prompt-user" id="brand-user">john@homelab</span><span class="dim">:</span><span class="prompt-path">~</span><span class="dim">$</span></a>
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav">menu</button>
+      <nav id="nav" aria-label="Primary">
+        <ul>
+          <li><a href="#home" data-sec="home">~/home</a></li>
+          <li><a href="#hardware" data-sec="hardware">~/hardware</a></li>
+          <li><a href="#network" data-sec="network">~/network</a></li>
+          <li><a href="#projects" data-sec="projects">~/projects</a></li>
+          <li><a href="#status" data-sec="status">~/status</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <noscript><div class="wrap"><p class="notice">This site needs JavaScript to load its content from data/content.json.</p></div></noscript>
+
+    <section id="home" data-code="SEC-01" aria-labelledby="home-h">
+      <div class="wrap">
+        <div class="term" role="group" aria-label="Boot log">
+          <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">SYS.BOOT // NODE-ARRAY</span>
+            <button class="link-btn" id="skip-boot" type="button">skip</button></div>
+          <pre class="boot" id="boot" aria-live="off"></pre>
+        </div>
+        <h1 id="home-h" class="cmd"><span class="p">$</span> <span id="home-cmd">whoami</span><span class="cursor" aria-hidden="true"></span></h1>
+        <div id="bio" class="bio"></div>
+        <dl id="facts" class="facts"></dl>
+      </div>
+    </section>
+
+    <section id="hardware" data-code="SEC-02" aria-labelledby="hardware-h">
+      <div class="wrap">
+        <h2 id="hardware-h" class="cmd"><span class="p">$</span> ls -l <span class="path">~/hardware</span></h2>
+        <p class="lead" id="hardware-intro"></p>
+        <div id="hardware-grid" class="grid"></div>
+      </div>
+    </section>
+
+    <section id="network" data-code="SEC-03" aria-labelledby="network-h">
+      <div class="wrap">
+        <h2 id="network-h" class="cmd"><span class="p">$</span> cat <span class="path">~/network/topology</span></h2>
+        <p class="lead" id="network-intro"></p>
+        <figure class="diagram">
+          <div id="diagram" role="img" aria-label="Network diagram"></div>
+          <figcaption class="dim" id="diagram-cap"></figcaption>
+        </figure>
+        <div class="net-cols">
+          <div class="card">
+            <h3>VLANs</h3>
+            <div class="table-wrap"><table id="vlan-table">
+              <caption class="sr">VLAN list</caption>
+              <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Subnet</th><th scope="col">Note</th></tr></thead>
+              <tbody></tbody>
+            </table></div>
+          </div>
+          <div class="card" id="dns-card"></div>
+          <div class="card" id="vpn-card"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" data-code="SEC-04" aria-labelledby="projects-h">
+      <div class="wrap">
+        <h2 id="projects-h" class="cmd"><span class="p">$</span> ls -t <span class="path">~/projects</span></h2>
+        <p class="lead" id="projects-intro"></p>
+        <div class="filters" id="tag-filters" role="group" aria-label="Filter projects by tag"></div>
+        <ol id="project-list" class="projects"></ol>
+      </div>
+    </section>
+
+    <section id="status" data-code="SEC-05" aria-labelledby="status-h">
+      <div class="wrap">
+        <h2 id="status-h" class="cmd"><span class="p">$</span> systemctl status <span class="path">--all</span></h2>
+        <p class="lead" id="status-intro"></p>
+        <div class="status-bar">
+          <div id="summary" class="summary" aria-live="polite"></div>
+          <button class="btn" id="refresh" type="button">refresh</button>
+        </div>
+        <p class="dim small" id="status-meta"></p>
+        <p class="notice stale" id="status-stale" role="status" hidden></p>
+        <div id="status-grid" class="status-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap"><span class="dim" id="footer"></span> <a href="#home" class="top">[top]</a>
+      <p class="quote-foot"><q lang="la">Aut inveniam viam aut faciam</q> <span class="attr">&mdash; attributed to Hannibal</span><br><span class="trans">&ldquo;I will either find a way or make one.&rdquo;</span></p></div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

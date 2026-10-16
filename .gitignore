@@ -1,0 +1,3 @@
+tools/mapping.json
+tools/*.env
+__pycache__/
