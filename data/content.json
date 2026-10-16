@@ -37,7 +37,7 @@
       },
       {
         "key": "storage",
-        "value": "\u224836 TiB ZFS HDD capacity (4 pools) + 2 SSD pools"
+        "value": "≈36 TiB ZFS HDD capacity (4 pools) + 2 SSD pools"
       },
       {
         "key": "network",
@@ -250,7 +250,7 @@
         "specs": [
           [
             "Ports",
-            "2.5 GbE ports + 2 \u00d7 10G SFP+"
+            "2.5 GbE ports + 2 × 10G SFP+"
           ],
           [
             "Links",
@@ -331,11 +331,11 @@
           ],
           [
             "SSD pools",
-            "Two \u2248464 GiB pools for guest root disks"
+            "Two ≈464 GiB pools for guest root disks"
           ],
           [
             "Snapshots",
-            "Daily \u00d77 and weekly \u00d74 on data datasets, hourly \u00d724 on Nextcloud"
+            "Daily ×7 and weekly ×4 on data datasets, hourly ×24 on Nextcloud"
           ]
         ],
         "tags": [
@@ -376,12 +376,12 @@
   "network": {
     "intro": "pfSense firewall with 802.1Q VLANs, a MikroTik 2.5 GbE / 10G core switch, and Pi-hole for DNS. Every guest attaches to one bridge on the main LAN. A dedicated, isolated VLAN carries the nested VMware lab off the GPU node, kept separate from production traffic. Addresses are intentionally left out of this public site.",
     "diagram": {
-      "caption": "// physical topology \u00b7 nested lab on an isolated VLAN \u00b7 addresses omitted",
+      "caption": "// physical topology · nested lab on an isolated VLAN · addresses omitted",
       "groups": [
         {
           "id": "nested",
           "label": "NESTED VMWARE LAB // ISOLATED VLAN",
-          "sub": "hangs off the GPU node \u00b7 separate from production",
+          "sub": "hangs off the GPU node · separate from production",
           "x": 700,
           "y": 80,
           "w": 390,
@@ -402,7 +402,7 @@
         {
           "id": "fw",
           "label": "pfSense",
-          "sub": "firewall \u00b7 NAT \u00b7 DHCP",
+          "sub": "firewall · NAT · DHCP",
           "kind": "firewall",
           "x": 240,
           "y": 88,
@@ -432,7 +432,7 @@
         {
           "id": "sw",
           "label": "MikroTik CRS310",
-          "sub": "2.5 GbE + 2\u00d710G SFP+",
+          "sub": "2.5 GbE + 2×10G SFP+",
           "kind": "core",
           "x": 160,
           "y": 175,
@@ -442,21 +442,21 @@
         {
           "id": "n1",
           "label": "Node 1",
-          "sub": "storage \u00b7 2.5 GbE",
+          "sub": "storage · 2.5 GbE",
           "kind": "node",
           "x": 16,
           "y": 265,
-          "w": 124,
+          "w": 100,
           "h": 50
         },
         {
           "id": "gpu",
           "label": "GPU node",
-          "sub": "GPU \u00b7 2.5 GbE",
+          "sub": "GPU · 2.5 GbE",
           "kind": "node",
-          "x": 152,
+          "x": 122,
           "y": 265,
-          "w": 124,
+          "w": 100,
           "h": 50
         },
         {
@@ -464,9 +464,9 @@
           "label": "Office switch",
           "sub": "2.5 GbE",
           "kind": "switch",
-          "x": 288,
+          "x": 334,
           "y": 265,
-          "w": 124,
+          "w": 100,
           "h": 50
         },
         {
@@ -474,9 +474,9 @@
           "label": "1 GbE switch",
           "sub": "downstream",
           "kind": "switch",
-          "x": 424,
+          "x": 440,
           "y": 265,
-          "w": 124,
+          "w": 100,
           "h": 50
         },
         {
@@ -484,9 +484,9 @@
           "label": "Wi-Fi 7 AP",
           "sub": "802.11be",
           "kind": "wifi",
-          "x": 560,
+          "x": 546,
           "y": 265,
-          "w": 124,
+          "w": 100,
           "h": 50
         },
         {
@@ -494,9 +494,9 @@
           "label": "Node 2",
           "sub": "1 GbE",
           "kind": "node",
-          "x": 255,
+          "x": 330,
           "y": 360,
-          "w": 108,
+          "w": 100,
           "h": 48
         },
         {
@@ -504,29 +504,29 @@
           "label": "Node 3",
           "sub": "1 GbE",
           "kind": "node",
-          "x": 373,
-          "y": 360,
-          "w": 108,
+          "x": 228,
+          "y": 265,
+          "w": 100,
           "h": 48
         },
         {
           "id": "pbs",
           "label": "Backup server",
-          "sub": "PBS \u00b7 1 GbE",
+          "sub": "PBS · 1 GbE",
           "kind": "node",
-          "x": 491,
+          "x": 440,
           "y": 360,
-          "w": 108,
+          "w": 100,
           "h": 48
         },
         {
           "id": "pihole",
           "label": "Pi-hole",
-          "sub": "DNS pair \u00b7 1 GbE",
+          "sub": "DNS pair · 1 GbE",
           "kind": "node",
-          "x": 609,
+          "x": 550,
           "y": 360,
-          "w": 108,
+          "w": 100,
           "h": 48
         },
         {
@@ -582,7 +582,7 @@
         {
           "id": "ontap",
           "label": "ONTAP sim",
-          "sub": "2-node \u00b7 in progress",
+          "sub": "2-node · in progress",
           "kind": "nested",
           "x": 790,
           "y": 320,
@@ -642,7 +642,7 @@
           "speed": "1g"
         },
         {
-          "from": "gsw",
+          "from": "sw",
           "to": "n3",
           "speed": "1g"
         },
@@ -802,7 +802,7 @@
         "title": "Backup and data protection",
         "summary": [
           "Problem: guests lived on four hosts with different disk layouts, and the big data pools are single disks with no redundancy.",
-          "Approach: a Proxmox Backup Server and one cluster-wide vzdump job (every guest, Sundays 01:00, snapshot mode), opt-in ZFS auto-snapshots (daily \u00d77 and weekly \u00d74 on file datasets, hourly \u00d724 on Nextcloud), and manual snapshots plus config backups before risky changes. Audited what the job really covers, including bind-mounted data being outside vzdump.",
+          "Approach: a Proxmox Backup Server and one cluster-wide vzdump job (every guest, Sundays 01:00, snapshot mode), opt-in ZFS auto-snapshots (daily ×7 and weekly ×4 on file datasets, hourly ×24 on Nextcloud), and manual snapshots plus config backups before risky changes. Audited what the job really covers, including bind-mounted data being outside vzdump.",
           "Result: backups of every guest back to January 2026, a 14.4 TiB datastore with 1.9 TiB used, and snapshot restore points on all data datasets."
         ],
         "tags": [
@@ -844,5 +844,5 @@
     "refreshSeconds": 1800,
     "staleMinutes": 480
   },
-  "footer": "Brittain Homelab \u00b7 updated Oct 14, 2026 \u00b7 built with plain HTML, CSS and JS. No credentials are stored on this site."
+  "footer": "Brittain Homelab · updated Oct 14, 2026 · built with plain HTML, CSS and JS. No credentials are stored on this site."
 }
