@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17T06:00:01Z",
+  "updated": "2026-10-17T12:00:01Z",
   "services": [
     {
       "id": "ads-b-tracker",
@@ -24,7 +24,7 @@
     {
       "id": "dos-games-js-dos",
       "name": "DOS games (js-dos)",
-      "state": "down"
+      "state": "up"
     },
     {
       "id": "file-server",
@@ -49,7 +49,7 @@
     {
       "id": "local-ai-ollama",
       "name": "Local AI (Ollama)",
-      "state": "stopped"
+      "state": "up"
     },
     {
       "id": "nextcloud",
@@ -89,7 +89,7 @@
     {
       "id": "romm",
       "name": "RomM",
-      "state": "down"
+      "state": "up"
     },
     {
       "id": "sabnzbd",
@@ -114,7 +114,7 @@
     {
       "id": "windows-gaming-vm",
       "name": "Windows gaming VM",
-      "state": "up"
+      "state": "stopped"
     }
   ]
 }
