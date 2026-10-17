@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17T12:00:01Z",
+  "updated": "2026-10-17T18:00:01Z",
   "services": [
     {
       "id": "ads-b-tracker",
@@ -49,7 +49,7 @@
     {
       "id": "local-ai-ollama",
       "name": "Local AI (Ollama)",
-      "state": "up"
+      "state": "stopped"
     },
     {
       "id": "nextcloud",
