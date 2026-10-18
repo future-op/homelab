@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18T12:00:01Z",
+  "updated": "2026-10-18T18:00:01Z",
   "services": [
     {
       "id": "ads-b-tracker",
@@ -114,7 +114,7 @@
     {
       "id": "windows-gaming-vm",
       "name": "Windows gaming VM",
-      "state": "stopped"
+      "state": "up"
     }
   ]
 }
