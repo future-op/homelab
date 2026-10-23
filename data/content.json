@@ -216,7 +216,7 @@
           ],
           [
             "VLANs",
-            "802.1Q: 4090 WAN, 4091 LAN, 4092 Home/IoT"
+            "802.1Q segments for WAN, LAN, Home/IoT and the nested lab"
           ]
         ],
         "tags": [
@@ -300,7 +300,7 @@
           ],
           [
             "Schedule",
-            "Sundays 01:00, snapshot mode"
+            "Weekly, snapshot mode"
           ],
           [
             "History",
@@ -705,19 +705,20 @@
     },
     "vlans": [
       {
-        "id": 4090,
         "name": "WAN",
         "note": "WAN side of the pfSense uplink"
       },
       {
-        "id": 4091,
         "name": "LAN",
         "note": "Main LAN: Proxmox cluster, guests and client devices (static IPs for containers, DHCP pool for clients)"
       },
       {
-        "id": 4092,
         "name": "Home/IoT",
         "note": "Separate subnet on its own firewall interface"
+      },
+      {
+        "name": "Nested lab",
+        "note": "Isolated segment for the nested VMware vSphere and ONTAP lab"
       }
     ],
     "dns": {
@@ -802,7 +803,7 @@
         "title": "Backup and data protection",
         "summary": [
           "Problem: guests lived on four hosts with different disk layouts, and the big data pools are single disks with no redundancy.",
-          "Approach: a Proxmox Backup Server and one cluster-wide vzdump job (every guest, Sundays 01:00, snapshot mode), opt-in ZFS auto-snapshots (daily ×7 and weekly ×4 on file datasets, hourly ×24 on Nextcloud), and manual snapshots plus config backups before risky changes. Audited what the job really covers, including bind-mounted data being outside vzdump.",
+          "Approach: a Proxmox Backup Server and one cluster-wide vzdump job (every guest, weekly, snapshot mode), opt-in ZFS auto-snapshots (daily ×7 and weekly ×4 on file datasets, hourly ×24 on Nextcloud), and manual snapshots plus config backups before risky changes. Audited what the job really covers, including bind-mounted data being outside vzdump.",
           "Result: backups of every guest back to January 2026, a 14.4 TiB datastore with 1.9 TiB used, and snapshot restore points on all data datasets."
         ],
         "tags": [

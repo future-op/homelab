@@ -427,7 +427,7 @@
 
     /* VLAN table + side cards (unchanged behavior) */
     var vl = n.vlans || [], hasSubnet = vl.some(function (v) { return v.subnet; });
-    var cols = [['ID', 'id'], ['Name', 'name']];
+    var cols = vl.some(function (v) { return v.id != null; }) ? [['ID', 'id'], ['Name', 'name']] : [['Name', 'name']];
     if (hasSubnet) cols.push(['Subnet', 'subnet']);
     cols.push(['Note', 'note']);
     var hr = $('vlan-table').tHead.rows[0]; hr.textContent = '';
